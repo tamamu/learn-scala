@@ -1,6 +1,9 @@
 /**
   * Created by tamamu on 5/24/16.
   */
+
+import datastructures.List2
+
 object Test {
 
   // Fibonacci
@@ -51,6 +54,7 @@ object Test {
     (a:A) => f(g(a))
 
   def main(args: Array[String]) {
+    /*
     println(formatResult("Fibonacci", 5, fib))
     println(findFirst(Array("Hello", "World", "!"), (x:String) => x == "!"))
     println(isSorted(Array(2, 1), (a:Int, b:Int) => a <= b))
@@ -61,6 +65,9 @@ object Test {
       (x:Int) => x*x,
       (x:Int) => x+5
     )(5))
+    */
 
+    println(List2.reverseLeft(List2(1, 2, 3, 4, 5)))
+    println(List2.foldLeft(List2(1, 2, 3, 4, 5), 0)(_ + _))
   }
 }
