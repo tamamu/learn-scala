@@ -128,4 +128,57 @@ object List2 {
   // foldLeft を foldRight で実装
   def foldLeftRight[A, B](as: List2[A], z: B)(f: (B, A) => B): B =
     foldRight(reverseRight(as), z)((x, y) => f(y, x))
+
+  // append を foldRight で実装
+  def appendRight[A](a1: List2[A], a2: List2[A]): List2[A] =
+    foldRight(a1, a2)((x, y) => Cons(x, y))
+
+  // 複数のリストからなるリストを1つのリストとして連結
+  def flatten[A](as: List2[List2[A]]): List2[A] =
+    foldRight(as, Nil: List2[A])((x, y) => append(x, y))
+
+  // 各要素に1を足したリストを返す
+  def plusOne(xs: List2[Int]): List2[Int] =
+    foldRight(xs, Nil: List2[Int])((x, y) => Cons(x + 1, y))
+
+  // Double型要素をString型要素に変換したリストを返す
+  def doubleToString(ds: List2[Double]): List2[String] =
+    foldRight(ds, Nil: List2[String])((x, y) => Cons(x.toString, y))
+
+  // リストの各要素を変更し、かつリストの構造をそのまま保つ総称関数
+  def map[A, B](as: List2[A])(f: A => B): List2[B] =
+    foldRight(as, Nil: List2[B])((x, y) => Cons(f(x), y))
+
+  // 与えられた述語条件が満たされるまでリストから要素を削除する
+  def filter[A](as: List2[A])(f: A => Boolean): List2[A] =
+    as match {
+      case Nil => as
+      case Cons(x, y) => if (f(x)) filter(y)(f) else Cons(x, filter(y)(f))
+    }
+
+  def flatMap[A, B](as: List2[A])(f: A => List2[B]): List2[B] =
+    flatten(map(as)(f))
+
+  // filter を flatMap で実装
+  def filterMap[A](as: List2[A])(f: A => Boolean): List2[A] =
+    flatMap(as)((x) => if (f(x)) Nil else List2(x))
+
+  def plusList(a1: List2[Int], a2: List2[Int]): List2[Int] =
+    a1 match {
+      case Nil => Nil
+      case Cons(x1, y1) => a2 match {
+        case Nil => Nil
+        case Cons(x2, y2) => Cons(x1 + x2, plusList(y1, y2))
+      }
+    }
+
+  // plusListを一般化
+  def zipWith[A](a1: List2[A], a2: List2[A])(f: (A, A) => A): List2[A] =
+    a1 match {
+      case Nil => Nil
+      case Cons(x1, y1) => a2 match {
+        case Nil => Nil
+        case Cons(x2, y2) => Cons(f(x1, x2), zipWith(y1, y2)(f))
+      }
+    }
 }
