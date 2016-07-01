@@ -181,4 +181,28 @@ object List2 {
         case Cons(x2, y2) => Cons(f(x1, x2), zipWith(y1, y2)(f))
       }
     }
+
+  def hasSubsequence[A](sup: List2[A], sub: List2[A]): Boolean = {
+    def f(s1: List2[A], s2: List2[A]): List2[A] =
+      s1 match {
+        case Nil => s2 match {
+          case Nil => Nil
+          case _ => s1
+        }
+        case Cons(h1, t1) => s2 match {
+          case Nil => Nil
+          case Cons(h2, t2) => if (h1 == h2) f(t1, t2) else s1
+        }
+      }
+    def loop(head: List2[A]): Boolean =
+      head match {
+        case Nil => false
+        case Cons(_, t) => f(head, sub) match {
+          case Nil => true
+          case _ => loop(t)
+        }
+      }
+
+    loop(sup)
+  }
 }
