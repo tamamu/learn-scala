@@ -33,4 +33,14 @@ object Tree {
       case Leaf(v) => Leaf(f(v))
       case Branch(l, r) => Branch(map(l, f), map(r, f))
     }
+
+  def fold[A](root: Tree[A])(f: (A, A) => A): A =
+    root match {
+      case Leaf(v) => v
+      case Branch(l, r) => f(fold(l)(f), fold(r)(f))
+    }
+
+  //?
+  //def sizeFold[A](root: Tree[A]): Int =
+  //  fold(root)((x,y) => 1 + sizeFold(x) + sizeFold(y))
 }
